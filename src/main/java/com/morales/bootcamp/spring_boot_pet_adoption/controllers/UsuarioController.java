@@ -10,20 +10,24 @@ import java.util.List;
 import java.util.Optional;
 
 public class UsuarioController {
-
     private final UsuarioRepository repository;
 
     public UsuarioController(UsuarioRepository usuarioRepository) {
         this.repository = usuarioRepository;
     }
 
-
+    /**
+     * @return Todos los Usuarios.
+     */
     @GetMapping("/api/usuarios")
     public ResponseEntity<List<Usuario>> allUsers() {
         return ResponseEntity.ok(repository.findAll());
-
     }
 
+    /**
+     * @param id
+     * @return Usuario por Id.
+     */
     @GetMapping("/api/usuarios/{id}")
     public ResponseEntity<?> getUser(@PathVariable("id") Long id) {
         Optional<Usuario> usuarioObtained = repository.findById(id);
@@ -34,6 +38,10 @@ public class UsuarioController {
         }
     }
 
+    /**
+     * @param usuarioToCreate
+     * @return usuario creado
+     */
     @PostMapping("/api/usuarios")
     public ResponseEntity<?> createUser(@RequestBody Usuario usuarioToCreate) {
         try {
@@ -48,18 +56,28 @@ public class UsuarioController {
         }
     }
 
-
+    /**
+     * @param usuarioToUpdate
+     * @param id
+     * @return usuario actualizado
+     */
     @PutMapping("/api/usuarios/{id}")
     public ResponseEntity<Usuario> updateUser(@RequestBody Usuario usuarioToUpdate, @PathVariable("id") Long id) {
         return repository.findById(id)
                 .map(usuario -> {
                     usuario.setNombre(usuarioToUpdate.getNombre());
+                    usuario.setTelefono(usuarioToUpdate.getTelefono());
+                    usuario.setCorreo_electronico(usuarioToUpdate.getCorreo_electronico());
                     repository.save(usuario);
                     return ResponseEntity.ok(usuario);
                 }).orElse(ResponseEntity.notFound().build()
                 );
     }
 
+    /**
+     * @param id
+     * @return
+     */
     @DeleteMapping("/api/usuarios/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         try {
@@ -73,5 +91,4 @@ public class UsuarioController {
             return ResponseEntity.status(500).body("Error al eliminar Usuario id " + id);
         }
     }
-
 }

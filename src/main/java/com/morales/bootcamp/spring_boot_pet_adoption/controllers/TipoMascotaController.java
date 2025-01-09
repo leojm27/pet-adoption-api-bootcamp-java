@@ -25,7 +25,7 @@ public class TipoMascotaController {
     }
 
     @GetMapping("/api/tipo-mascota/{id}")
-    public ResponseEntity<?> getTipoMascota(@PathVariable Long id) {
+    public ResponseEntity<?> getTipoMascota(@PathVariable("id") Long id) {
         Optional<TipoMascota> tipoMascota = repository.findById(id);
         if (tipoMascota.isPresent()) {
             return ResponseEntity.ok(tipoMascota.get());
@@ -52,7 +52,7 @@ public class TipoMascotaController {
     }
 
     @PutMapping("/api/tipo-mascota/{id}")
-    public ResponseEntity<?> updateTipoMascota(@RequestBody TipoMascota tipoMascotaActualizado, @PathVariable Long id) {
+    public ResponseEntity<?> updateTipoMascota(@RequestBody TipoMascota tipoMascotaActualizado, @PathVariable("id") Long id) {
         return repository.findById(id)
                 .map(tipoMascota -> {
                     tipoMascota.setNombre(tipoMascotaActualizado.getNombre());
@@ -64,7 +64,7 @@ public class TipoMascotaController {
     }
 
     @DeleteMapping("api/tipo-mascota/{id}")
-    public ResponseEntity<?> deleteTipoMascota(@PathVariable Long id) {
+    public ResponseEntity<?> deleteTipoMascota(@PathVariable("id") Long id) {
         try {
             if (!repository.existsById(id)) {
                 return ResponseEntity.notFound().build();

@@ -1,0 +1,77 @@
+package com.morales.bootcamp.spring_boot_pet_adoption.controllers;
+
+import com.morales.bootcamp.spring_boot_pet_adoption.models.Usuario;
+import com.morales.bootcamp.spring_boot_pet_adoption.repository.UsuarioRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+public class UsuarioController {
+
+    private final UsuarioRepository repository;
+
+    public UsuarioController(UsuarioRepository usuarioRepository) {
+        this.repository = usuarioRepository;
+    }
+
+
+    @GetMapping("/api/usuarios")
+    public ResponseEntity<List<Usuario>> allUsers() {
+        return ResponseEntity.ok(repository.findAll());
+
+    }
+
+    @GetMapping("/api/usuarios/{id}")
+    public ResponseEntity<?> getUser(@PathVariable("id") Long id) {
+        Optional<Usuario> usuarioObtained = repository.findById(id);
+        if (usuarioObtained.isPresent()) {
+            return ResponseEntity.ok(usuarioObtained);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/api/usuarios")
+    public ResponseEntity<?> createUser(@RequestBody Usuario usuarioToCreate) {
+        try {
+            Usuario nuevoUsuario = repository.save(usuarioToCreate);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(nuevoUsuario);
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ocurrio un error al intentar crear nuevo Usuario");
+        }
+    }
+
+
+    @PutMapping("/api/usuarios/{id}")
+    public ResponseEntity<Usuario> updateUser(@RequestBody Usuario usuarioToUpdate, @PathVariable("id") Long id) {
+        return repository.findById(id)
+                .map(usuario -> {
+                    usuario.setNombre(usuarioToUpdate.getNombre());
+                    repository.save(usuario);
+                    return ResponseEntity.ok(usuario);
+                }).orElse(ResponseEntity.notFound().build()
+                );
+    }
+
+    @DeleteMapping("/api/usuarios/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+        try {
+            if (!repository.existsById(id)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            repository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al eliminar Usuario id " + id);
+        }
+    }
+
+}

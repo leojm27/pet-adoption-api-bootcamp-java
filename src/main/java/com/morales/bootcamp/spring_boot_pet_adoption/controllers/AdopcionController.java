@@ -101,8 +101,10 @@ public class AdopcionController {
      * @param userId
      * @return Adopciones de Usuario.
      */
+    /*
     @GetMapping("/api/adopciones/{userId}")
     public ResponseEntity<List<Adopcion>> getAdoptionByUserId(@PathVariable("userId") Long userId) {
         return repository.findByUserId(userId);
     }
+    */
 }

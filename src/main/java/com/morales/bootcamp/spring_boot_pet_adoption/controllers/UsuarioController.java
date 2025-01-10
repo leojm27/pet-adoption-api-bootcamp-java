@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@RestController
 public class UsuarioController {
     private final UsuarioRepository repository;
 
@@ -34,7 +35,7 @@ public class UsuarioController {
         if (usuarioObtained.isPresent()) {
             return ResponseEntity.ok(usuarioObtained);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario " + id + " no encontrado");
         }
     }
 
@@ -65,9 +66,16 @@ public class UsuarioController {
     public ResponseEntity<Usuario> updateUser(@RequestBody Usuario usuarioToUpdate, @PathVariable("id") Long id) {
         return repository.findById(id)
                 .map(usuario -> {
-                    usuario.setNombre(usuarioToUpdate.getNombre());
-                    usuario.setTelefono(usuarioToUpdate.getTelefono());
-                    usuario.setCorreo_electronico(usuarioToUpdate.getCorreo_electronico());
+                    if(usuarioToUpdate.getNombre() != null) {
+                        usuario.setNombre(usuarioToUpdate.getNombre());
+                    }
+                    if(usuarioToUpdate.getTelefono() != null) {
+                        usuario.setTelefono(usuarioToUpdate.getTelefono());
+                    }
+                    if(usuarioToUpdate.getCorreo_electronico() != null) {
+                        usuario.setCorreo_electronico(usuarioToUpdate.getCorreo_electronico());
+                    }
+
                     repository.save(usuario);
                     return ResponseEntity.ok(usuario);
                 }).orElse(ResponseEntity.notFound().build()
@@ -86,7 +94,7 @@ public class UsuarioController {
             }
 
             repository.deleteById(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body("El Usuario con id " + id + " ha sido eliminado.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al eliminar Usuario id " + id);
         }

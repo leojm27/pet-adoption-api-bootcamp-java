@@ -36,7 +36,7 @@ public class MascotaController {
         if (mascotaObtained.isPresent()) {
             return ResponseEntity.ok(mascotaObtained);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mascota " + id + " no encontrada");
         }
     }
 
@@ -67,10 +67,19 @@ public class MascotaController {
     public ResponseEntity<Mascota> updateMascota(@RequestBody Mascota mascotaToUpdate, @PathVariable("id") Long id) {
         return repository.findById(id)
                 .map(mascota -> {
-                    mascota.setNombre(mascotaToUpdate.getNombre());
-                    mascota.setTipo_mascota(mascotaToUpdate.getTipo_mascota());
-                    mascota.setEdad(mascotaToUpdate.getEdad());
-                    mascota.setDisponible(mascotaToUpdate.getDisponible());
+                    if (mascotaToUpdate.getNombre() != null) {
+                        mascota.setNombre(mascotaToUpdate.getNombre());
+                    }
+                    if(mascotaToUpdate.getTipo_mascota() != null) {
+                        mascota.setTipo_mascota(mascotaToUpdate.getTipo_mascota());
+                    }
+                    if(mascotaToUpdate.getEdad() != null) {
+                        mascota.setEdad(mascotaToUpdate.getEdad());
+                    }
+                    if (mascotaToUpdate.getDisponible() != null){
+                        mascota.setDisponible(mascotaToUpdate.getDisponible());
+                    }
+
                     repository.save(mascota);
                     return ResponseEntity.ok(mascota);
                 }).orElse(ResponseEntity.notFound().build()

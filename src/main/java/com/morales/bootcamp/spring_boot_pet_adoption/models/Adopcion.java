@@ -1,12 +1,10 @@
 package com.morales.bootcamp.spring_boot_pet_adoption.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -15,16 +13,19 @@ public class Adopcion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String id_mascota;
-    private Long id_usuario;
-    private Date fecha_adopcion;
+    @Column(name = "id_mascota")
+    private Long idMascota;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
+    @Column(name = "fecha_adopcion")
+    private Date fechaAdopcion; // yyyy-MM-dd
 
     protected Adopcion(){}
 
-    public Adopcion(String id_mascota, Long id_usuario, Date fecha_adopcion){
-        this.id_mascota = id_mascota;
-        this.id_usuario = id_usuario;
-        this.fecha_adopcion = fecha_adopcion;
+    public Adopcion(Long idMascota, Long idUsuario, Date fechaAdopcion){
+        this.idMascota = idMascota;
+        this.idUsuario = idUsuario;
+        this.fechaAdopcion = fechaAdopcion;
     }
     
 }

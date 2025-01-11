@@ -1,7 +1,10 @@
 package com.morales.bootcamp.spring_boot_pet_adoption.controllers;
 
 import com.morales.bootcamp.spring_boot_pet_adoption.models.Adopcion;
+import com.morales.bootcamp.spring_boot_pet_adoption.models.Usuario;
 import com.morales.bootcamp.spring_boot_pet_adoption.repository.AdopcionRepository;
+import com.morales.bootcamp.spring_boot_pet_adoption.repository.MascotaRepository;
+import com.morales.bootcamp.spring_boot_pet_adoption.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +16,13 @@ import java.util.Optional;
 public class AdopcionController {
 
     private final AdopcionRepository repository;
+    private final UsuarioRepository usuarioRepository;
+    private final MascotaRepository mascotaRepository;
 
-    public AdopcionController(AdopcionRepository adopcionRepository) {
+    public AdopcionController(AdopcionRepository adopcionRepository, UsuarioRepository usuarioRepository, MascotaRepository mascotaRepository) {
         this.repository = adopcionRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.mascotaRepository = mascotaRepository;
     }
 
     /**
@@ -36,7 +43,7 @@ public class AdopcionController {
         if (adopcionObtained.isPresent()) {
             return ResponseEntity.ok(adopcionObtained.get());
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Adopcion " + id + " no encontrada");
         }
     }
 
@@ -46,6 +53,10 @@ public class AdopcionController {
      */
     @PostMapping("/api/adopciones")
     public ResponseEntity<?> createPet(@RequestBody Adopcion adopcion) {
+        // Optional<Usuario> usuario = usuarioRepository.findById(adopcion.getId());
+
+
+
         try {
             Adopcion nuevaAdopcion = repository.save(adopcion);
             return ResponseEntity
@@ -67,9 +78,16 @@ public class AdopcionController {
     public ResponseEntity<Adopcion> updateAdopcion(@RequestBody Adopcion adopcionToUpdate, @PathVariable("id") Long id) {
         return repository.findById(id)
                 .map(adopcion -> {
-                    adopcion.setFecha_adopcion(adopcionToUpdate.getFecha_adopcion());
-                    adopcion.setId_mascota(adopcionToUpdate.getId_mascota());
-                    adopcion.setId_usuario(adopcionToUpdate.getId_usuario());
+                    // crear funcion para validar 'fecha_adopcion'
+                    if (adopcionToUpdate.getFechaAdopcion() != null) {
+                        adopcion.setFechaAdopcion(adopcionToUpdate.getFechaAdopcion());
+                    }
+                    if (adopcionToUpdate.getIdMascota() != null) {
+                        adopcion.setIdMascota(adopcionToUpdate.getIdMascota());
+                    }
+                    if (adopcionToUpdate.getIdUsuario() != null) {
+                        adopcion.setIdUsuario(adopcionToUpdate.getIdUsuario());
+                    }
 
                     repository.save(adopcion);
                     return ResponseEntity.ok(adopcion);
@@ -85,7 +103,7 @@ public class AdopcionController {
     @DeleteMapping("/api/adopciones/{id}")
     public ResponseEntity<?> deleteAdoption(@PathVariable("id") Long id) {
         try {
-            if(!repository.existsById(id)){
+            if (!repository.existsById(id)) {
                 return ResponseEntity.notFound().build();
             }
 

@@ -17,8 +17,8 @@ public class Usuario {
     private String correoElectronico;
     private String telefono;
 
-    @OneToMany(mappedBy = "idUsuario")
-    private List<Adopcion> adopciones;
+    // @OneToMany(mappedBy = "idUsuario")
+    // private List<Adopcion> adopciones;
 
 
     public Usuario(){}

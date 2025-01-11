@@ -18,9 +18,9 @@ public class Mascota {
     private Long idTipoMascota;
     private Integer edad;
     private Boolean disponible;
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "id")
-    private TipoMascota tipoMascota;
+    // @OneToOne
+    // @JoinColumn(name = "id", referencedColumnName = "id")
+    // private TipoMascota tipoMascota;
 
     protected Mascota(){}
 

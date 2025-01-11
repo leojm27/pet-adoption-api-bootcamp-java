@@ -1,10 +1,9 @@
 package com.morales.bootcamp.spring_boot_pet_adoption.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -14,15 +13,19 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private String correo_electronico;
+    @Column(name = "correo_electronico")
+    private String correoElectronico;
     private String telefono;
+
+    @OneToMany(mappedBy = "idUsuario")
+    private List<Adopcion> adopciones;
 
 
     public Usuario(){}
 
     public Usuario(String nombre, String correo_electronico, String telefono){
         this.nombre = nombre;
-        this.correo_electronico = correo_electronico;
+        this.correoElectronico = correo_electronico;
         this.telefono = telefono;
     }
 

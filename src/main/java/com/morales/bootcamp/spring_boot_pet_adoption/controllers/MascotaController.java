@@ -70,8 +70,8 @@ public class MascotaController {
                     if (mascotaToUpdate.getNombre() != null) {
                         mascota.setNombre(mascotaToUpdate.getNombre());
                     }
-                    if(mascotaToUpdate.getTipo_mascota() != null) {
-                        mascota.setTipo_mascota(mascotaToUpdate.getTipo_mascota());
+                    if(mascotaToUpdate.getIdTipoMascota() != null) {
+                        mascota.setIdTipoMascota(mascotaToUpdate.getIdTipoMascota());
                     }
                     if(mascotaToUpdate.getEdad() != null) {
                         mascota.setEdad(mascotaToUpdate.getEdad());

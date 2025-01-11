@@ -1,10 +1,9 @@
 package com.morales.bootcamp.spring_boot_pet_adoption.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 
 @Data
@@ -15,15 +14,19 @@ public class Mascota {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private String tipo_mascota;
+    @Column(name = "id_tipo_mascota")
+    private Long idTipoMascota;
     private Integer edad;
     private Boolean disponible;
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private TipoMascota tipoMascota;
 
     protected Mascota(){}
 
-    public Mascota(String nombre, String tipo_mascota, Integer edad, Boolean disponible){
+    public Mascota(String nombre, Long idTipoMascota, Integer edad, Boolean disponible){
         this.nombre = nombre;
-        this.tipo_mascota = tipo_mascota;
+        this.idTipoMascota = idTipoMascota;
         this.edad = edad;
         this.disponible = disponible;
     }

@@ -72,8 +72,8 @@ public class UsuarioController {
                     if(usuarioToUpdate.getTelefono() != null) {
                         usuario.setTelefono(usuarioToUpdate.getTelefono());
                     }
-                    if(usuarioToUpdate.getCorreo_electronico() != null) {
-                        usuario.setCorreo_electronico(usuarioToUpdate.getCorreo_electronico());
+                    if(usuarioToUpdate.getCorreoElectronico() != null) {
+                        usuario.setCorreoElectronico(usuarioToUpdate.getCorreoElectronico());
                     }
 
                     repository.save(usuario);

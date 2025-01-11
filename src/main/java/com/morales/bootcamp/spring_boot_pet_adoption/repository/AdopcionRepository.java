@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface AdopcionRepository extends JpaRepository<Adopcion, Long> {
-    ResponseEntity<List<Adopcion>> findByUserId(Long userId);
+
+    // ResponseEntity<List<Adopcion>> findByUserId(Long userId);
+
 }

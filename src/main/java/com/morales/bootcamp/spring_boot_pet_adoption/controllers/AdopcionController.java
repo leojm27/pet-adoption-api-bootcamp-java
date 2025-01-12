@@ -33,11 +33,16 @@ public class AdopcionController {
     @GetMapping("/api/adopciones/{id}")
     public ResponseEntity<?> getAdoption(@PathVariable("id") Long id) {
         try {
-            return ResponseEntity.ok(adopcionService.getAdopcionById(id));
-        } catch (IllegalArgumentException ie) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ie.getMessage());
+            Adopcion adopcion = adopcionService.getAdopcionById(id);
+            if(adopcion != null) {
+                return ResponseEntity.ok(adopcion);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener Adopcion id " + id);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener Adopcion id " + id);
         }
     }
 
@@ -67,12 +72,12 @@ public class AdopcionController {
     @PatchMapping("/api/mascotas/{id}")
     public ResponseEntity<?> updateAdopcion(@RequestBody Adopcion adopcionToUpdate, @PathVariable("id") Long id) {
         try {
-            Adopcion adopcionUpdate = adopcionService.updateAdopcion(adopcionToUpdate, id);
-            return ResponseEntity.ok(adopcionUpdate);
-        } catch (IllegalArgumentException ie) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(ie.getMessage());
+            Adopcion adopcion = adopcionService.updateAdopcion(adopcionToUpdate, id);
+            if(adopcion != null) {
+                return ResponseEntity.ok(adopcion);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -101,15 +106,4 @@ public class AdopcionController {
         }
     }
 
-
-    /**
-     * @param userId
-     * @return Adopciones de Usuario.
-     */
-    /*
-    @GetMapping("/api/adopciones/{userId}")
-    public ResponseEntity<List<Adopcion>> getAdoptionByUserId(@PathVariable("userId") Long userId) {
-        return repository.findByUserId(userId);
-    }
-    */
 }

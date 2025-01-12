@@ -1,46 +1,51 @@
 package com.morales.bootcamp.spring_boot_pet_adoption.controllers;
 
 import com.morales.bootcamp.spring_boot_pet_adoption.models.TipoMascota;
-import com.morales.bootcamp.spring_boot_pet_adoption.repository.TipoMascotaRepository;
+import com.morales.bootcamp.spring_boot_pet_adoption.services.TipoMascotaService;
+import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
+@AllArgsConstructor
 public class TipoMascotaController {
-    // como queremos proveer una api-rest, uso resccontroller, en vez de regresar una vista, regresa un response
-    // injection de repository
-    private final TipoMascotaRepository repository;
-
-    public TipoMascotaController(TipoMascotaRepository repository) {
-        this.repository = repository;
-    }
+    private final TipoMascotaService service;
 
     @GetMapping("/api/tipo-mascota")
-    public ResponseEntity<List<TipoMascota>> getAll() {
-        return ResponseEntity.ok(repository.findAll());
+    public ResponseEntity<?> getTipoMascotas() {
+        try {
+            return ResponseEntity.ok(service.getTipoMascotas());
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener Tipos de mascotas");
+        }
     }
 
     @GetMapping("/api/tipo-mascota/{id}")
     public ResponseEntity<?> getTipoMascota(@PathVariable("id") Long id) {
-        Optional<TipoMascota> tipoMascota = repository.findById(id);
-        if (tipoMascota.isPresent()) {
-            return ResponseEntity.ok(tipoMascota.get());
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            TipoMascota tipoMascota = service.getTipoMascota(id);
+            if (tipoMascota != null) {
+                return ResponseEntity.ok(tipoMascota);
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("Tipo de Mascota " + id + " no encontrada");
+            }
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener Tipo de Mascota id " + id);
         }
-
-        // alternativa
-        // return tipoMascota.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping("/api/tipo-mascota")
     public ResponseEntity<?> createTipoMascota(@RequestBody TipoMascota tipoMascota) {
         try {
-            TipoMascota nuevoTipoMascota = repository.save(tipoMascota);
+            TipoMascota nuevoTipoMascota = service.createTipoMascota(tipoMascota);
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(nuevoTipoMascota);
@@ -53,27 +58,37 @@ public class TipoMascotaController {
 
     @PutMapping("/api/tipo-mascota/{id}")
     public ResponseEntity<?> updateTipoMascota(@RequestBody TipoMascota tipoMascotaActualizado, @PathVariable("id") Long id) {
-        return repository.findById(id)
-                .map(tipoMascota -> {
-                    tipoMascota.setNombre(tipoMascotaActualizado.getNombre());
-                    repository.save(tipoMascota);
-                    // return ResponseEntity.noContent().build();
-                    return ResponseEntity.ok(tipoMascota);
-                }).orElse(ResponseEntity.notFound().build()
-                );
+        try {
+            TipoMascota tipoMascota = service.updateTipoMascota(tipoMascotaActualizado, id);
+            if (tipoMascota != null) {
+                return ResponseEntity.ok(tipoMascota);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar Tipo de Mascota id " + id);
+        }
     }
 
     @DeleteMapping("api/tipo-mascota/{id}")
     public ResponseEntity<?> deleteTipoMascota(@PathVariable("id") Long id) {
         try {
-            if (!repository.existsById(id)) {
-                return ResponseEntity.notFound().build();
-            }
-
-            repository.deleteById(id);
+            service.deleteTipoMascota(id);
             return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException ie) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(ie.getMessage());
+        } catch (DataIntegrityViolationException datae) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(datae.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al eliminar Tipo de Mascota id " + id);
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar Tipo de Mascota id " + id);
         }
     }
 

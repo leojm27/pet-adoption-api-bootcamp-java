@@ -1,28 +1,27 @@
 package com.morales.bootcamp.spring_boot_pet_adoption.controllers;
 
 import com.morales.bootcamp.spring_boot_pet_adoption.models.Usuario;
-import com.morales.bootcamp.spring_boot_pet_adoption.repository.UsuarioRepository;
+import com.morales.bootcamp.spring_boot_pet_adoption.services.UsuarioService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
+@AllArgsConstructor
 public class UsuarioController {
-    private final UsuarioRepository repository;
-
-    public UsuarioController(UsuarioRepository usuarioRepository) {
-        this.repository = usuarioRepository;
-    }
+    private final UsuarioService service;
 
     /**
      * @return Todos los Usuarios.
      */
     @GetMapping("/api/usuarios")
-    public ResponseEntity<List<Usuario>> allUsers() {
-        return ResponseEntity.ok(repository.findAll());
+    public ResponseEntity<?> allUsers() {
+        try {
+            return ResponseEntity.ok(service.getUsuarios());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener Usuarios");
+        }
     }
 
     /**
@@ -31,11 +30,15 @@ public class UsuarioController {
      */
     @GetMapping("/api/usuarios/{id}")
     public ResponseEntity<?> getUser(@PathVariable("id") Long id) {
-        Optional<Usuario> usuarioObtained = repository.findById(id);
-        if (usuarioObtained.isPresent()) {
-            return ResponseEntity.ok(usuarioObtained);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario " + id + " no encontrado");
+        try {
+            Usuario usuario = service.getUsuarioById(id);
+            if (usuario != null) {
+                return ResponseEntity.ok(usuario);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario " + id + " no encontrado");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener Usuario id " + id);
         }
     }
 
@@ -46,14 +49,10 @@ public class UsuarioController {
     @PostMapping("/api/usuarios")
     public ResponseEntity<?> createUser(@RequestBody Usuario usuarioToCreate) {
         try {
-            Usuario nuevoUsuario = repository.save(usuarioToCreate);
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(nuevoUsuario);
+            Usuario nuevoUsuario = service.createUsuario(usuarioToCreate);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
         } catch (Exception ex) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ocurrio un error al intentar crear nuevo Usuario");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrio un error al intentar crear nuevo Usuario");
         }
     }
 
@@ -63,23 +62,17 @@ public class UsuarioController {
      * @return usuario actualizado
      */
     @PutMapping("/api/usuarios/{id}")
-    public ResponseEntity<Usuario> updateUser(@RequestBody Usuario usuarioToUpdate, @PathVariable("id") Long id) {
-        return repository.findById(id)
-                .map(usuario -> {
-                    if(usuarioToUpdate.getNombre() != null) {
-                        usuario.setNombre(usuarioToUpdate.getNombre());
-                    }
-                    if(usuarioToUpdate.getTelefono() != null) {
-                        usuario.setTelefono(usuarioToUpdate.getTelefono());
-                    }
-                    if(usuarioToUpdate.getCorreoElectronico() != null) {
-                        usuario.setCorreoElectronico(usuarioToUpdate.getCorreoElectronico());
-                    }
-
-                    repository.save(usuario);
-                    return ResponseEntity.ok(usuario);
-                }).orElse(ResponseEntity.notFound().build()
-                );
+    public ResponseEntity<?> updateUser(@RequestBody Usuario usuarioToUpdate, @PathVariable("id") Long id) {
+        try {
+            Usuario usuario = service.updateUsuario(usuarioToUpdate, id);
+            if (usuario != null) {
+                return ResponseEntity.ok(usuario);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar Usuario id " + id);
+        }
     }
 
     /**
@@ -89,12 +82,12 @@ public class UsuarioController {
     @DeleteMapping("/api/usuarios/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         try {
-            if (!repository.existsById(id)) {
-                return ResponseEntity.notFound().build();
-            }
-
-            repository.deleteById(id);
-            return ResponseEntity.ok().body("El Usuario con id " + id + " ha sido eliminado.");
+            service.deleteUsuario(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException ie) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(ie.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al eliminar Usuario id " + id);
         }

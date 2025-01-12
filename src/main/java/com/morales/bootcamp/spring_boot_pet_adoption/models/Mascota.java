@@ -8,19 +8,24 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "mascotas")
 public class Mascota {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    @Column(name = "id_tipo_mascota")
+
+    @Column(name = "id_tipo_mascota", insertable = false, updatable = false) // Solo lectura
     private Long idTipoMascota;
     private Integer edad;
     private Boolean disponible;
-    // @OneToOne
-    // @JoinColumn(name = "id", referencedColumnName = "id")
-    // private TipoMascota tipoMascota;
+
+    /*
+    @ManyToOne
+    @JoinColumn(name = "id_tipo_mascota") // Relación con la tabla TipoMascota
+    private TipoMascota tipoMascota;
+    */
 
     protected Mascota(){}
 

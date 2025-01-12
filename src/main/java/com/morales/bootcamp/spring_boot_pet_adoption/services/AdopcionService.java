@@ -1,7 +1,6 @@
 package com.morales.bootcamp.spring_boot_pet_adoption.services;
 
 import com.morales.bootcamp.spring_boot_pet_adoption.models.Adopcion;
-
 import java.util.List;
 
 public interface AdopcionService {

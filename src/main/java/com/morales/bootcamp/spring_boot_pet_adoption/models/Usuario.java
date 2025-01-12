@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "usuarios")
 public class Usuario {
     
     @Id
@@ -16,10 +17,6 @@ public class Usuario {
     @Column(name = "correo_electronico")
     private String correoElectronico;
     private String telefono;
-
-    // @OneToMany(mappedBy = "idUsuario")
-    // private List<Adopcion> adopciones;
-
 
     public Usuario(){}
 

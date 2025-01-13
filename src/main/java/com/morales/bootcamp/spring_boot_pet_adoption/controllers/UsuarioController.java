@@ -16,7 +16,7 @@ public class UsuarioController {
      * @return Todos los Usuarios.
      */
     @GetMapping("/api/usuarios")
-    public ResponseEntity<?> allUsers() {
+    public ResponseEntity<?> getUsuarios() {
         try {
             return ResponseEntity.ok(service.getUsuarios());
         } catch (Exception e) {
@@ -29,7 +29,7 @@ public class UsuarioController {
      * @return Usuario por Id.
      */
     @GetMapping("/api/usuarios/{id}")
-    public ResponseEntity<?> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getUsuario(@PathVariable("id") Long id) {
         try {
             Usuario usuario = service.getUsuarioById(id);
             if (usuario != null) {
@@ -47,7 +47,7 @@ public class UsuarioController {
      * @return usuario creado
      */
     @PostMapping("/api/usuarios")
-    public ResponseEntity<?> createUser(@RequestBody Usuario usuarioToCreate) {
+    public ResponseEntity<?> createUsuario(@RequestBody Usuario usuarioToCreate) {
         try {
             Usuario nuevoUsuario = service.createUsuario(usuarioToCreate);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
@@ -62,7 +62,7 @@ public class UsuarioController {
      * @return usuario actualizado
      */
     @PutMapping("/api/usuarios/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody Usuario usuarioToUpdate, @PathVariable("id") Long id) {
+    public ResponseEntity<?> updateUsuario(@RequestBody Usuario usuarioToUpdate, @PathVariable("id") Long id) {
         try {
             Usuario usuario = service.updateUsuario(usuarioToUpdate, id);
             if (usuario != null) {
@@ -80,7 +80,7 @@ public class UsuarioController {
      * @return
      */
     @DeleteMapping("/api/usuarios/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteUsuario(@PathVariable("id") Long id) {
         try {
             service.deleteUsuario(id);
             return ResponseEntity.ok().build();

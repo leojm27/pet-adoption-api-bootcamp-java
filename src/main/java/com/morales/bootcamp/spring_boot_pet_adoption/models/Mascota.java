@@ -21,12 +21,6 @@ public class Mascota {
     private Integer edad;
     private Boolean disponible;
 
-    /*
-    @ManyToOne
-    @JoinColumn(name = "id_tipo_mascota") // Relación con la tabla TipoMascota
-    private TipoMascota tipoMascota;
-    */
-
     public Mascota(){}
 
     public Mascota(String nombre, Long idTipoMascota, Integer edad, Boolean disponible){

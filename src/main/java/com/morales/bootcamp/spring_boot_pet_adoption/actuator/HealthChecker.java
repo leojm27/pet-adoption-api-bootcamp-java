@@ -19,16 +19,12 @@ public class HealthChecker implements HealthIndicator {
 
     @Override
     public Health health() {
-        List<Mascota> mascotas = mascotaRepository.findAll();
+        Long mascotas = mascotaRepository.count();
 
-        if (mascotas.isEmpty()) {
-            return Health.down().withDetail("No hay mascotas disponibles", 0).build();
+        if (mascotas == 0) {
+            return Health.down().withDetail("No hay mascotas disponibles ", 0).build();
         } else {
-            long mascotasCount = mascotas.size();
-            long mascotasDisponiblesCount = mascotas.stream().filter(Mascota::getDisponible).count();
-
-            double porcentajeDisponibles = (double) (mascotasDisponiblesCount * 100) / mascotasCount;
-            return Health.up().withDetail("porcentaje mascotas disponibles: ", porcentajeDisponibles).build();
+            return Health.up().withDetail("Cantidad de mascotas disponibles ", mascotas).build();
         }
     }
 }

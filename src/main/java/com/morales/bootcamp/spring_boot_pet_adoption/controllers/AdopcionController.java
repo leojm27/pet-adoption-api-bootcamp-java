@@ -16,7 +16,7 @@ public class AdopcionController {
      * @return Todas las Adopciones.
      */
     @GetMapping("/api/adopciones")
-    public ResponseEntity<?> allAdoptions(Long id) {
+    public ResponseEntity<?> allAdopciones() {
         try {
             return ResponseEntity.ok(adopcionService.getAdopciones());
         } catch (Exception e) {
@@ -31,7 +31,7 @@ public class AdopcionController {
      * @return Adopcion por Id.
      */
     @GetMapping("/api/adopciones/{id}")
-    public ResponseEntity<?> getAdoption(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getAdopcion(@PathVariable("id") Long id) {
         try {
             Adopcion adopcion = adopcionService.getAdopcionById(id);
             if(adopcion != null) {
@@ -91,7 +91,7 @@ public class AdopcionController {
      * @return Adopcion Eliminada.
      */
     @DeleteMapping("/api/adopciones/{id}")
-    public ResponseEntity<?> deleteAdoption(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteAdopcion(@PathVariable("id") Long id) {
         try {
             adopcionService.deleteAdopcion(id);
             return ResponseEntity.ok().build();

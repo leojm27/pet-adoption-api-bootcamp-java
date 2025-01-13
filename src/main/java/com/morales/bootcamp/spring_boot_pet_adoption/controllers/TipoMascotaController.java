@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 public class TipoMascotaController {
     private final TipoMascotaService service;
 
+    /**
+     * @return Devuelve todos los Tipos de Mascotas
+     */
     @GetMapping("/api/tipo-mascota")
     public ResponseEntity<?> getTipoMascotas() {
         try {
@@ -24,6 +27,10 @@ public class TipoMascotaController {
         }
     }
 
+    /**
+     * @param id
+     * @return Devuelve Tipo de Mascota por id
+     */
     @GetMapping("/api/tipo-mascota/{id}")
     public ResponseEntity<?> getTipoMascota(@PathVariable("id") Long id) {
         try {
@@ -42,6 +49,10 @@ public class TipoMascotaController {
         }
     }
 
+    /**
+     * @param tipoMascota
+     * @return Crea Tipo de Mascota
+     */
     @PostMapping("/api/tipo-mascota")
     public ResponseEntity<?> createTipoMascota(@RequestBody TipoMascota tipoMascota) {
         try {
@@ -56,6 +67,11 @@ public class TipoMascotaController {
         }
     }
 
+    /**
+     * @param tipoMascotaActualizado
+     * @param id
+     * @return Actualiza Tipo de Mascota
+     */
     @PutMapping("/api/tipo-mascota/{id}")
     public ResponseEntity<?> updateTipoMascota(@RequestBody TipoMascota tipoMascotaActualizado, @PathVariable("id") Long id) {
         try {
@@ -72,6 +88,10 @@ public class TipoMascotaController {
         }
     }
 
+    /**
+     * @param id
+     * @return Elimina Tipo de Mascota
+     */
     @DeleteMapping("api/tipo-mascota/{id}")
     public ResponseEntity<?> deleteTipoMascota(@PathVariable("id") Long id) {
         try {

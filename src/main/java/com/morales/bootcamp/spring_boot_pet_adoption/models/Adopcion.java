@@ -23,29 +23,6 @@ public class Adopcion {
     @Column(name = "fecha_adopcion")
     private Date fechaAdopcion;
 
-    /*
-    @Column(name="creado_en")
-    private Date creadoEn;
-
-    @Column(name="actualizado_en")
-    private Date actualizadoEn;
-
-    @Column(name="eliminado_en")
-    private Date eliminadoEn;
-    */
-
-
-    /*
-    @OneToOne
-    @JoinColumn(name = "id_mascota", insertable = false, updatable = false)
-    private Mascota mascota;
-
-    @ManyToOne
-    @JoinColumn(name = "id_usuario", insertable = false, updatable = false)
-    private Usuario usuario;
-    */
-
-
     protected Adopcion() {
     }
 
@@ -53,7 +30,6 @@ public class Adopcion {
         this.idMascota = idMascota;
         this.idUsuario = idUsuario;
         this.fechaAdopcion = new Date();
-        // this.creadoEn = new Date();
     }
 
 }

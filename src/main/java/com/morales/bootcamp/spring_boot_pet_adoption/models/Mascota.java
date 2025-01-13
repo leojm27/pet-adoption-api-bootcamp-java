@@ -27,7 +27,7 @@ public class Mascota {
     private TipoMascota tipoMascota;
     */
 
-    protected Mascota(){}
+    public Mascota(){}
 
     public Mascota(String nombre, Long idTipoMascota, Integer edad, Boolean disponible){
         this.nombre = nombre;

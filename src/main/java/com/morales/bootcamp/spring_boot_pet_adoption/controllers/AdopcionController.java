@@ -69,7 +69,7 @@ public class AdopcionController {
      * @param id
      * @return Adopcion Actualizada.
      */
-    @PatchMapping("/api/mascotas/{id}")
+    @PutMapping("/api/adopciones/{id}")
     public ResponseEntity<?> updateAdopcion(@RequestBody Adopcion adopcionToUpdate, @PathVariable("id") Long id) {
         try {
             Adopcion adopcion = adopcionService.updateAdopcion(adopcionToUpdate, id);

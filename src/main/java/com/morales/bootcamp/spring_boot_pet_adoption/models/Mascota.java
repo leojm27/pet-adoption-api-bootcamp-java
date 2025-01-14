@@ -16,7 +16,7 @@ public class Mascota {
     private Long id;
     private String nombre;
 
-    @Column(name = "id_tipo_mascota", insertable = false, updatable = false) // Solo lectura
+    @Column(name = "id_tipo_mascota")
     private Long idTipoMascota;
     private Integer edad;
     private Boolean disponible;
